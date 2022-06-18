@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.forms import inlineformset_factory
 
 from .models import Product, Customer, Order
 from .forms import OrderForm
+from .filter import OrderFilter
 
 
 def home(request):
@@ -32,22 +34,35 @@ def products(request):
 
 def customer(request, pk_test):
     customer = Customer.objects.get(id=pk_test)
+
     orders = customer.order_set.all()
     order_count = orders.count()
 
-    context = {'customer': customer, 'orders': orders, 'orders_count': order_count}
+    myFilter = OrderFilter(request.GET, queryset=orders)
+    orders = myFilter.qs
+
+    context = {
+        'customer': customer,
+        'orders': orders,
+        'orders_count': order_count,
+        'myFilter': myFilter
+    }
     return render(request, 'accounts/customer.html', context)
 
 
-def createOrder(request):
-    form = OrderForm()
+def createOrder(request, pk):
+    OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'status'), extra=3)
+    customer = Customer.objects.get(id=pk)
+    # form = OrderForm(initial={'customer': customer})
+    formset = OrderFormSet(queryset=Order.objects.none(), instance=customer)
     if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            form.save()
+        # form = OrderForm(request.POST)
+        formset = OrderFormSet(request.POST, instance=customer)
+        if formset.is_valid():
+            formset.save()
             return redirect('/')
 
-    context = {'form': form}
+    context = {'formset': formset}
     return render(request, 'accounts/order_form.html', context)
 
 
