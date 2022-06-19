@@ -17,7 +17,7 @@ urlpatterns = [
     path('customer/<str:pk_test>/', views.customer, name='customer'),
 
     path('create_order/<str:pk>', views.createOrder, name='create_order'),
-    path('update_order/<str:pk>/', views.updateUpdate, name='update_order'),
+    path('update_order/<str:pk>/', views.updateOrder, name='update_order'),
     path('delete_order/<str:pk>/', views.deleteOrder, name='delete_order'),
 
     path('reset_password/', auth_views.PasswordResetView.as_view(), name='reset_password'),
