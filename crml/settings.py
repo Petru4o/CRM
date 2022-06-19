@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
 
     'django_filters',
-
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -135,5 +135,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+AWS_ACCESS_KEY_ID = 'AKIA6ESBFNUPPAN6U76E'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'petrosalii-crm-bucket'
 
+AWS_QUERYSTRING_AUTH = False
